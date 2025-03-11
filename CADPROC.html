@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Processos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<header>
+    <h1>Gerenciador de Processos</h1>
+    <nav>
+        <button id="btn-cadastrar">Cadastrar Processo</button>
+        <button id="btn-listar">Listar Processos</button>
+    </nav>
+</header>
+
+<style>
+    .left-image {
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+    .right-image {
+        position: fixed;
+        top: 0;
+        right: 0;
+    }
+    footer {
+        position: fixed; /* Fixa o footer no rodapé */
+        bottom: 0; /* Alinha na parte inferior da página */
+        left: 0; /* Garante que ocupe toda a largura */
+       /* width: 100%; /* Largura total da página */
+        text-align: center; /* Centraliza o texto horizontalmente */
+        padding: 1px; /* Espaçamento interno */
+        background-color: #e000004f; /* Cor de fundo leve para destacar */
+    }
+   
+</style>
+
+<body>
+    <img src="cad5.jpg" width="193" class="left-image" alt="Descrição da imagem">
+    <img src="iTCM (1).jpg" width="145" class="right-image" alt="Imagem da direita">
+
+    <main>
+        <!-- Formulário de Cadastro -->
+        <section id="cadastro-form" class="hidden">
+            <h2>Cadastro de Processo</h2>
+            <form id="form-processo">
+                <label for="numero-processo">Número do Processo:</label>
+                <input type="text" id="numero-processo" title="Número do Processo" placeholder="Digite o número do processo" required>
+
+                <label for="unidade-participante">Unidade Participante:</label>
+                <input type="text" id="unidade-participante" title="Unidade Participante" placeholder="Digite a unidade participante" required>
+
+                <label for="prioridade">Prioridade:</label>
+                <select id="prioridade" title="Prioridade" required>
+                    <option value="" disabled selected>Selecione uma prioridade</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Média">Média</option>
+                    <option value="Baixa">Baixa</option>
+                </select>
+                
+                <label for="origem">Origem:</label>
+                <input type="text" id="origem" title="Origem" placeholder="Digite a origem" required>
+
+                <label for="data-entrada">Data de Entrada:</label>
+                <input type="date" id="data-entrada" title="Data de Entrada" placeholder="Selecione a data de entrada" required>
+
+                <label for="data-saida">Data de Saída:</label>
+                <input type="date" id="data-saida" title="Data de Saída" placeholder="Selecione a data de saída">
+
+                <label for="natureza">Natureza:</label>
+                <input type="text" id="natureza" title="Natureza" placeholder="Digite a natureza">
+
+                <label for="tipo-demanda">Tipo de Demanda:</label>
+                <input type="text" id="tipo-demanda" title="Tipo de Demanda" placeholder="Digite o tipo de demanda">
+
+                <label for="quantidade-dias">Quantidade de Dias:</label>
+                <input type="number" id="quantidade-dias" title="Quantidade de Dias" placeholder="Digite a quantidade de dias">
+
+                <label for="periodo-pti">Período PTI:</label>
+                <input type="text" id="periodo-pti" title="Período PTI" placeholder="Digite o período PTI">
+
+                <label for="observacoes">Observações:</label>
+                <textarea id="observacoes" title="Observações" placeholder="Digite suas observações"></textarea>
+
+                <button type="submit">Salvar</button>
+                <button type="button" id="btn-cancelar">Cancelar</button>
+            </form>
+        </section>
+
+        <!-- Listagem de Processos -->
+        <section id="listagem-processos" class="hidden">
+            <h2>Listagem de Processos</h2>
+            <table id="tabela-processos">
+                <thead>
+                    <tr>
+                        <th><label for="selecionar-todos">Selecionar Todos</label><input type="checkbox" id="selecionar-todos" title="Selecionar Todos"></th>
+                        <th>Número do Processo</th>
+                        <th>Unidade Participante</th>
+                        <th>Prioridade</th>
+                        <th>Origem</th>
+                        <th>Data de Entrada</th>
+                        <th>Data de Saída</th>
+                        <th>Natureza</th>
+                        <th>Tipo de Demanda</th>
+                        <th>Quantidade de Dias</th>
+                        <th>Período PTI</th>
+                        <th>Observações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dados serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+            <button id="btn-apagar-selecionados">Apagar Selecionados</button>
+        </section>
+    </main>
+    <footer>
+        <p>Versão: 1.01</p>
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>
