@@ -6,53 +6,33 @@
     <title>Gerenciador de Processos</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-
-<header>
-    <h1>Gerenciador de Processos</h1>
-    <nav>
-        <button id="btn-cadastrar">Cadastrar Processo</button>
-        <button id="btn-listar">Listar Processos</button>
-    </nav>
-</header>
-
-<style>
-    .left-image {
-        position: fixed;
-        top: 0;
-        left: 0;
-    }
-    .right-image {
-        position: fixed;
-        top: 0;
-        right: 0;
-    }
-    footer {
-        position: fixed; /* Fixa o footer no rodapé */
-        bottom: 0; /* Alinha na parte inferior da página */
-        left: 0; /* Garante que ocupe toda a largura */
-       /* width: 100%; /* Largura total da página */
-        text-align: center; /* Centraliza o texto horizontalmente */
-        padding: 1px; /* Espaçamento interno */
-        background-color: #e000004f; /* Cor de fundo leve para destacar */
-    }
-   
-</style>
-
 <body>
-    <img src="cad5.jpg" width="193" class="left-image" alt="Descrição da imagem">
-    <img src="iTCM (1).jpg" width="145" class="right-image" alt="Imagem da direita">
+    <header>
+        <img src="cad5.jpg" width="193" class="left-image" alt="Descrição da imagem">
+        <img src="iTCM (1).jpg" width="145" class="right-image" alt="Imagem da direita">
+        <h1>Gerenciador de Processos</h1>
+        <nav>
+            <button id="btn-cadastrar">Cadastrar Processo</button>
+            <button id="btn-listar">Listar Processos</button>
+            <button id="btn-envio-atividade">Envio de Atividade</button>
+            <button id="btn-acompanhar">Acompanhar</button>
+            <button id="btn-exportar">Exportar para Excel</button>
+            <button id="btn-backup">Backup</button>
+            <button id="btn-restaurar">Restaurar</button>
+            <input type="file" id="btn-restaurar-input" accept=".json" style="display: none;">
+        </nav>
+    </header>
 
     <main>
-        <!-- Formulário de Cadastro -->
         <section id="cadastro-form" class="hidden">
-            <h2>Cadastro de Processo</h2>
+            <div class="title-container">
+                <h2>Cadastro de Atividades</h2>
+            </div>
             <form id="form-processo">
                 <label for="numero-processo">Número do Processo:</label>
-                <input type="text" id="numero-processo" title="Número do Processo" placeholder="Digite o número do processo" required>
-
+                <input type="text" id="numero-processo" title="Número do Processo" placeholder="Ex.: 12345e25" required>
                 <label for="unidade-participante">Unidade Participante:</label>
                 <input type="text" id="unidade-participante" title="Unidade Participante" placeholder="Digite a unidade participante" required>
-
                 <label for="prioridade">Prioridade:</label>
                 <select id="prioridade" title="Prioridade" required>
                     <option value="" disabled selected>Selecione uma prioridade</option>
@@ -60,39 +40,56 @@
                     <option value="Média">Média</option>
                     <option value="Baixa">Baixa</option>
                 </select>
-                
                 <label for="origem">Origem:</label>
                 <input type="text" id="origem" title="Origem" placeholder="Digite a origem" required>
-
                 <label for="data-entrada">Data de Entrada:</label>
-                <input type="date" id="data-entrada" title="Data de Entrada" placeholder="Selecione a data de entrada" required>
-
+                <input type="text" id="data-entrada" title="Data de Entrada" placeholder="dd-mm-aaaa" required>
                 <label for="data-saida">Data de Saída:</label>
-                <input type="date" id="data-saida" title="Data de Saída" placeholder="Selecione a data de saída">
-
+                <input type="text" id="data-saida" title="Data de Saída" placeholder="dd-mm-aaaa">
                 <label for="natureza">Natureza:</label>
                 <input type="text" id="natureza" title="Natureza" placeholder="Digite a natureza">
-
                 <label for="tipo-demanda">Tipo de Demanda:</label>
                 <input type="text" id="tipo-demanda" title="Tipo de Demanda" placeholder="Digite o tipo de demanda">
-
-                <label for="quantidade-dias">Quantidade de Dias:</label>
-                <input type="number" id="quantidade-dias" title="Quantidade de Dias" placeholder="Digite a quantidade de dias">
-
-                <label for="periodo-pti">Período PTI:</label>
-                <input type="text" id="periodo-pti" title="Período PTI" placeholder="Digite o período PTI">
-
+                <label for="data-entrega-atribuicao">Data para a Entrega da Atribuição:</label>
+                <input type="text" id="data-entrega-atribuicao" title="Data para a Entrega da Atribuição" placeholder="dd-mm-aaaa">
+                <div class="subtitle-container">
+                    <h3>Vinculação ao PTI</h3>
+                </div>
+                <label for="ano-pti">ANO PTI:</label>
+                <input type="text" id="ano-pti" title="ANO PTI" placeholder="Digite o ano PTI">
+                <label>Semestre:</label>
+                <div class="semestre-options">
+                    <label><input type="radio" name="semestre" value="1º Semestre" required> 1º Semestre</label>
+                    <label><input type="radio" name="semestre" value="2º Semestre"> 2º Semestre</label>
+                </div>
+                <label for="meta">META:</label>
+                <select id="meta" title="META" required>
+                    <option value="" disabled selected>Selecione uma meta</option>
+                    <option value="01 – Análise de P. de Contas de PM- Vínculos: SAÚDE, MDE/FUNDEB e terceirização, com RPC">01 – Análise de P. de Contas de PM- Vínculos: SAÚDE, MDE/FUNDEB e terceirização, com RPC</option>
+                    <option value="02 – Auxiliar RC de PM, CM E DESC. Emitir RPC">02 – Auxiliar RC de PM, CM E DESC. Emitir RPC</option>
+                    <option value="03 – Elaborar RT – TCE/TO, Reexames, Denúncia e outros">03 – Elaborar RT – TCE/TO, Reexames, Denúncia e outros</option>
+                    <option value="04 – Instrução Processual – Verificações, recomendações que não necessitem de RT">04 – Instrução Processual – Verificações, recomendações que não necessitem de RT</option>
+                    <option value="05 – Atividades na fase de planej. da auditoria de conformidade/elaboração de papéis de trabalho">05 – Atividades na fase de planej. da auditoria de conformidade/elaboração de papéis de trabalho</option>
+                    <option value="06 – Atividades na fase de execução da auditoria de conformidade">06 – Atividades na fase de execução da auditoria de conformidade</option>
+                    <option value="07 – Atividades na elaboração e correção do relatório da auditoria de conformidade">07 – Atividades na elaboração e correção do relatório da auditoria de conformidade</option>
+                    <option value="08 – Cursos com 40 horas de carga horária mínima">08 – Cursos com 40 horas de carga horária mínima</option>
+                    <option value="09 – Atividades de inspeção IN LOCO">09 – Atividades de inspeção IN LOCO</option>
+                    <option value="10 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da PM">10 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da PM</option>
+                    <option value="11 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da CM">11 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da CM</option>
+                    <option value="12 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da DESC/Consórcios">12 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da DESC/Consórcios</option>
+                    <option value="13 – Participação em reuniões periódicas com a equipe da inspetoria">13 – Participação em reuniões periódicas com a equipe da inspetoria</option>
+                    <option value="14 – Atividades extras: cursos, comissões, palestras e correlatos">14 – Atividades extras: cursos, comissões, palestras e correlatos</option>
+                </select>
                 <label for="observacoes">Observações:</label>
                 <textarea id="observacoes" title="Observações" placeholder="Digite suas observações"></textarea>
-
                 <button type="submit">Salvar</button>
                 <button type="button" id="btn-cancelar">Cancelar</button>
             </form>
         </section>
 
-        <!-- Listagem de Processos -->
         <section id="listagem-processos" class="hidden">
             <h2>Listagem de Processos</h2>
+            <input type="text" id="busca-processos" placeholder="Buscar por Número do Processo ou Unidade Participante">
             <table id="tabela-processos">
                 <thead>
                     <tr>
@@ -105,21 +102,87 @@
                         <th>Data de Saída</th>
                         <th>Natureza</th>
                         <th>Tipo de Demanda</th>
-                        <th>Quantidade de Dias</th>
-                        <th>Período PTI</th>
+                        <th>Data para a Entrega da Atribuição</th>
+                        <th>ANO PTI</th>
+                        <th>Semestre</th>
+                        <th>META</th>
                         <th>Observações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Dados serão inseridos aqui via JavaScript -->
                 </tbody>
             </table>
             <button id="btn-apagar-selecionados">Apagar Selecionados</button>
         </section>
+
+        <section id="envio-atividade" class="hidden">
+            <h2>Listagem para Envio de Atividades</h2>
+            <label for="email-destinatario">Destinatário:</label>
+            <select id="email-destinatario" required>
+                <option value="" disabled selected>Selecione um destinatário</option>
+                <option value="anderson.anjos@tcm.ba.gov.br">anderson.anjos@tcm.ba.gov.br</option>
+                <option value="kleber.rodrigues@tcm.ba.gov.br">kleber.rodrigues@tcm.ba.gov.br</option>
+                <option value="fabio.andrade@tcm.ba.gov.br">fabio.andrade@tcm.ba.gov.br</option>
+                <option value="agnelo.cordeiro@tcm.ba.gov.br">agnelo.cordeiro@tcm.ba.gov.br</option>
+            </select>
+            <table id="tabela-envio-atividade">
+                <thead>
+                    <tr>
+                        <th><label for="selecionar-todos-envio">Selecionar Todos</label><input type="checkbox" id="selecionar-todos-envio" title="Selecionar Todos"></th>
+                        <th>Número do Processo</th>
+                        <th>Unidade Participante</th>
+                        <th>Natureza</th>
+                        <th>META</th>
+                        <th>Data para a Entrega da Atribuição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <button id="btn-enviar-email" disabled>Enviar</button>
+        </section>
+
+        <section id="acompanhar" class="hidden">
+            <h2>Acompanhamento de Processos Enviados</h2>
+            <table id="tabela-acompanhar">
+                <thead>
+                    <tr>
+                        <th>Número do Processo</th>
+                        <th>E-mail Encaminhado</th>
+                        <th>Data de Envio</th>
+                        <th>Prazo Restante</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+
+        <div id="restauracao-selecao" class="hidden">
+            <h2>Selecione os Processos para Restauração</h2>
+            <table id="tabela-restauracao">
+                <thead>
+                    <tr>
+                        <th>Selecionar</th>
+                        <th>Número do Processo</th>
+                        <th>Unidade Participante</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <button id="btn-restaurar-selecionados">Restaurar Selecionados</button>
+            <button id="btn-restaurar-todos">Restaurar Todos</button>
+            <button id="btn-cancelar-restauracao">Cancelar</button>
+        </div>
     </main>
+
     <footer>
-        <p>Versão: 1.01</p>
+        <p>Versão: 1.41</p>
     </footer>
-    <script src="js/script.js"></script>
+
+    <script src="js/xlsx.full.min.js"></script>
+    <script>if (typeof XLSX === 'undefined') document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.20.3/xlsx.full.min.js"><\/script>');</script>
+    <script defer src="js/script.js"></script>
 </body>
 </html>
