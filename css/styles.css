@@ -1,77 +1,190 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 5;
-    background-color: #faf9f9;
+    padding: 0;
+    background-color: #f4f4f4;
 }
 
 header {
     background-color: #1c31a3;
     color: rgb(247, 245, 245);
-    padding: 10px;
+    padding: 35px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
+header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.left-image {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.right-image {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+nav {
+    margin-top: 20px;
+}
+
 nav button {
-    margin: 5px;
-    padding: 10px;
-    background-color: #fff;
-    border: none;
+    margin: 0 5px;
+    padding: 10px 10px;
+    font-size: 1em;
     cursor: pointer;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#cadastro-form h2 {
+    text-align: center;
+    margin: 0;
+}
+
+.title-container {
+    background-color: #b3d4fc;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.subtitle-container {
+    background-color: #b3d4fc;
+    padding: 8px 20px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.subtitle-container h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+form input, form select, form textarea {
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+form textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+form button, #btn-enviar-email {
+    padding: 10px;
+    background-color: #1c31a3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+form button:hover, #btn-enviar-email:hover {
+    background-color: #0e1a6b;
+}
+
+#btn-enviar-email:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.semestre-options {
+    margin-bottom: 10px;
+}
+
+.semestre-options label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #1c31a3;
+    color: white;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#busca-processos {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
 }
 
 .hidden {
     display: none;
 }
 
-form {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.prazo-esgotado {
+    color: red;
+    font-weight: bold;
 }
 
-form label {
-    display: block;
-    margin-top: 10px;
-}
-
-form input, form select, form textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-form button {
-    margin-top: 15px;
+footer {
+    text-align: center;
     padding: 10px;
-    background-color: #1512c4;
+    background-color: #1c31a3;
     color: white;
-    border: none;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #152db4;
-}
-
-#listagem-processos table {
+    position: relative;
+    bottom: 0;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-#listagem-processos th, #listagem-processos td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-#listagem-processos th {
-    background-color: #810101;
-    color: white;
 }
