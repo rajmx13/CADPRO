@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gerenciador de Processos Administrativos">
+    <title>Gerenciador de Processos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="hidden"> 
+        <img src="imagens/cad5.jpg" class="fixed-image left" alt="Logo da Esquerda" loading="lazy" aria-hidden="true">
+        <img src="imagens/iTCM.jpg" class="fixed-image right" alt="Logo da Direita" loading="lazy" aria-hidden="true">
+        <h1>Gerenciador de Processos</h1>
+        <nav>
+            <button id="btn-cadastrar">Cadastrar Processo</button>
+            <button id="btn-listar">Listar Processos</button>
+            <button id="btn-alterar">Alterar Processo</button>
+            <button id="btn-enviar">Envio de Atividade</button>
+            <button id="btn-acompanhar">Acompanhar</button>
+            <div class="dropdown-menu"> 
+                <button id="btn-manutencao">Manutenção</button>
+                <div id="submenu-manutencao" class="submenu hidden">
+                    <a href="#" id="btn-exportar">Exportar para Excel</a>
+                    <a href="#" id="btn-exportar-pdf">Exportar para PDF</a>
+                    <a href="#" id="btn-backup">Backup</a>
+                    <a href="#" id="btn-restaurar">Restaurar</a>
+                </div>
+            </div>
+            <button id="btn-sair">Sair</button>
+        </nav>
+    </header>
+
+    <main id="conteudo">
+        <section id="login" class="content">
+            <h2>Acesso ao Sistema</h2>
+            <form id="form-login" role="form">
+                <label for="nome-acesso">Usuário/Nome de Acesso:</label>
+                <input type="text" id="nome-acesso" required autocomplete="username">
+                <label for="senha-login">Senha:</label>
+                <input type="password" id="senha-login" required autocomplete="current-password">
+                <p id="mensagem-erro-login" class="erro"></p>
+                <button type="submit">Entrar</button>
+                <button type="button" id="btn-ir-cadastro">Não tem conta? Cadastre-se</button>
+            </form>
+        </section>
+
+        <section id="cadastro-usuario" class="content hidden">
+            <h2>Cadastro de Novo Usuário</h2>
+            <form id="form-cadastro-usuario" role="form">
+                <label for="novo-nome-acesso">Nome de Acesso:</label>
+                <input type="text" id="novo-nome-acesso" required autocomplete="username">
+                <label for="nova-senha">Nova Senha:</label>
+                <input type="password" id="nova-senha" required autocomplete="new-password">
+                <p id="mensagem-erro-cadastro" class="erro"></p>
+                <button type="submit">Cadastrar</button>
+                <button type="button" id="btn-voltar-login">Voltar para o Login</button>
+            </form>
+        </section>
+
+        <section id="dashboard" class="content hidden">
+            <h2>Dashboard</h2>
+            <div class="graficos">
+                <div class="grafico-container">
+                    <h3>Processos por Prioridade</h3>
+                    <canvas id="graficoPrioridade"></canvas>
+                </div>
+                <div class="grafico-container">
+                    <h3>Processos por Encarregado</h3>
+                    <canvas id="graficoEncarregado"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="cadastro" class="content hidden">
+            <h2>Cadastro de Atividades</h2>
+            <form id="form-cadastro" role="form">
+                <fieldset>
+                    <legend>Dados Básicos</legend>
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <label for="numero-processo">Número do Processo*:</label>
+                            <input type="text" id="numero-processo" required placeholder="Ex: 12345e25" pattern="\d{5}e\d{2}">
+                            <span id="error-numero-processo" class="erro"></span>
+                        </div>
+                        <div class="grid-item">
+                            <label for="unidade">Unidade Participante*:</label>
+                            <input type="text" id="unidade" required>
+                        </div>
+                        <div class="grid-item">
+                            <label for="prioridade">Prioridade*:</label>
+                            <select id="prioridade" required>
+                                <option value="">Selecione</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Média">Média</option>
+                                <option value="Baixa">Baixa</option>
+                            </select>
+                        </div>
+                        <div class="grid-item">
+                            <label for="origem">Origem*:</label>
+                            <input type="text" id="origem" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Datas</legend>
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <label for="data-entrada">Data de Entrada na Unidade*:</label>
+                            <input type="date" id="data-entrada" required>
+                            <span id="error-data-entrada" class="erro"></span>
+                        </div>
+                        <div class="grid-item">
+                            <label for="data-designacao">Data de Designação:</label>
+                            <input type="date" id="data-designacao">
+                            <span id="error-data-designacao" class="erro"></span>
+                        </div>
+                        <div class="grid-item">
+                            <label for="data-conclusao">Data de Conclusão:</label>
+                            <input type="date" id="data-conclusao">
+                            <span id="error-data-conclusao" class="erro"></span>
+                        </div>
+                        <div class="grid-item">
+                            <label for="data-saida">Data de Saída:</label>
+                            <input type="date" id="data-saida">
+                            <span id="error-data-saida" class="erro"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Dados Adicionais</legend>
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <label for="tipo-demanda">Tipo de Demanda*:</label>
+                            <select id="tipo-demanda" required>
+                                <option value="">Selecione</option>
+                                <option value="Interna">Interna</option>
+                                <option value="Externa">Externa</option>
+                            </select>
+                        </div>
+                        <div class="grid-item">
+                            <label for="natureza">Natureza*:</label>
+                            <input type="text" id="natureza" required>
+                        </div>
+                        <div class="grid-item">
+                            <label for="ano-pti">ANO PTI:</label>
+                            <input type="text" id="ano-pti">
+                        </div>
+                        <div class="grid-item">
+                            <label for="semestre">Semestre:</label>
+                            <select id="semestre">
+                                <option value="">Selecione</option>
+                                <option value="1º Semestre">1º Semestre</option>
+                                <option value="2º Semestre">2º Semestre</option>
+                            </select>
+                        </div>
+                        <div class="grid-item full-width">
+                            <label for="meta">META*:</label>
+                            <select id="meta" required>
+                                <option value="">Selecione</option>
+                                <option value="01 – Análise de P. de Contas de PM- Vínculos: SAÚDE, MDE/FUNDEB e terceirização, com RPC">01 – Análise de P. de Contas de PM- Vínculos: SAÚDE, MDE/FUNDEB e terceirização, com RPC</option>
+                                <option value="02 – Auxiliar RC de PM, CM E DESC. Emitir RPC">02 – Auxiliar RC de PM, CM E DESC. Emitir RPC</option>
+                                <option value="03 – Elaborar RT – TCE/TO, Reexames, Denúncia e outros">03 – Elaborar RT – TCE/TO, Reexames, Denúncia e outros</option>
+                                <option value="04 – Instrução Processual – Verificações, recomendações que não necessitem de RT">04 – Instrução Processual – Verificações, recomendações que não necessitem de RT</option>
+                                <option value="05 – Atividades na fase de planej. da auditoria de conformidade/elaboração de papéis de trabalho">05 – Atividades na fase de planej. da auditoria de conformidade/elaboração de papéis de trabalho</option>
+                                <option value="06 – Atividades na fase de execução da auditoria de conformidade">06 – Atividades na fase de execução da auditoria de conformidade</option>
+                                <option value="07 – Atividades na elaboração e correção do relatório da auditoria de conformidade">07 – Atividades na elaboração e correção do relatório da auditoria de conformidade</option>
+                                <option value="08 – Cursos com 40 horas de carga horária mínima">08 – Cursos com 40 horas de carga horária mínima</option>
+                                <option value="09 – Atividades de inspeção IN LOCO">09 – Atividades de inspeção IN LOCO</option>
+                                <option value="10 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da PM">10 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da PM</option>
+                                <option value="11 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da CM">11 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da CM</option>
+                                <option value="12 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da DESC/Consórcios">12 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da DESC/Consórcios</option>
+                                <option value="13 – Participação em reuniões periódicas com a equipe da inspetoria">13 – Participação em reuniões periódicas com a equipe da inspetoria</option>
+                                <option value="14 – Atividades extras: cursos, comissões, palestras e correlatos">14 – Atividades extras: cursos, comissões, palestras e correlatos</option>
+                                <option value="15 – Medidas Administrativa Preparatória - MAP">15 – Medidas Administrativa Preparatória - MAP</option>
+                            </select>
+                        </div>
+                        <div class="grid-item full-width">
+                            <label for="encarregado">Encarregado da Elaboração*:</label>
+                            <select id="encarregado" required>
+                                <option value="">Selecione</option>
+                                <option value="Luana Alice">Luana Alice</option>
+                                <option value="José Vilebaldo">José Vilebaldo</option>
+                                <option value="João Pedro">João Pedro</option>
+                                <option value="Maicon Breno">Maicon Breno</option>
+                                <option value="Kleber Sena">Kleber Sena</option>
+                                <option value="Fábio Luís">Fábio Luís</option>
+                                <option value="Anderson dos Anjos">Anderson dos Anjos</option>
+                                <option value="Agnelo das Mercês">Agnelo das Mercês</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Observações</legend>
+                    <label for="observacoes">Observações:</label>
+                    <textarea id="observacoes"></textarea>
+                </fieldset>
+                <button type="submit">Cadastrar</button>
+                <button type="button" id="btn-cancelar-cadastro">Cancelar</button>
+            </form>
+        </section>
+
+        <section id="listagem" class="content hidden">
+            <h2>Listagem de Processos</h2>
+            <div class="filtros">
+                <label for="busca-numero-unidade">Buscar por Nº ou Unidade:</label>
+                <input type="text" id="busca-numero-unidade">
+                <label for="filtro-prioridade">Prioridade:</label>
+                <select id="filtro-prioridade">
+                    <option value="">Todas</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Média">Média</option>
+                    <option value="Baixa">Baixa</option>
+                </select>
+                <label for="filtro-encarregado">Encarregado da Elaboração:</label>
+                <select id="filtro-encarregado">
+                    <option value="">Todos</option>
+                    <option value="Luana Alice">Luana Alice</option>
+                    <option value="José Vilebaldo">José Vilebaldo</option>
+                    <option value="João Pedro">João Pedro</option>
+                    <option value="Maicon Breno">Maicon Breno</option>
+                    <option value="Kleber Sena">Kleber Sena</option>
+                    <option value="Fábio Luís">Fábio Luís</option>
+                    <option value="Anderson dos Anjos">Anderson dos Anjos</option>
+                    <option value="Agnelo das Mercês">Agnelo das Mercês</option>
+                </select>
+                <label for="filtro-meta">META:</label>
+                <select id="filtro-meta">
+                    <option value="">Todas</option>
+                    <option value="01 – Análise de P. de Contas de PM- Vínculos: SAÚDE, MDE/FUNDEB e terceirização, com RPC">01 – Análise de P. de Contas</option>
+                    <option value="02 – Auxiliar RC de PM, CM E DESC. Emitir RPC">02 – Auxiliar RC</option>
+                    <option value="03 – Elaborar RT – TCE/TO, Reexames, Denúncia e outros">03 – Elaborar RT</option>
+                    <option value="04 – Instrução Processual – Verificações, recomendações que não necessitem de RT">04 – Instrução Processual</option>
+                    <option value="05 – Atividades na fase de planej. da auditoria de conformidade/elaboração de papéis de trabalho">05 – Planejamento Auditoria</option>
+                    <option value="06 – Atividades na fase de execução da auditoria de conformidade">06 – Execução Auditoria</option>
+                    <option value="07 – Atividades na elaboração e correção do relatório da auditoria de conformidade">07 – Relatório Auditoria</option>
+                    <option value="08 – Cursos com 40 horas de carga horária mínima">08 – Cursos 40h</option>
+                    <option value="09 – Atividades de inspeção IN LOCO">09 – Inspeção IN LOCO</option>
+                    <option value="10 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da PM">10 – Análises PM</option>
+                    <option value="11 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da CM">11 – Análises CM</option>
+                    <option value="12 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da DESC/Consórcios">12 – Análises DESC</option>
+                    <option value="13 – Participação em reuniões periódicas com a equipe da inspetoria">13 – Reuniões</option>
+                    <option value="14 – Atividades extras: cursos, comissões, palestras e correlatos">14 – Atividades Extras</option>
+                    <option value="15 – Medidas Administrativa Preparatória - MAP">15 – MAP</option>
+                </select>
+            </div>
+            <div class="tabela-rolagem-superior-container">
+                <div class="tabela-rolagem-superior-fixa" id="scroll-sync-listagem">
+                    <div class="rolagem-filler" id="filler-listagem"></div>
+                </div>
+                <div class="tabela-processos-wrapper" id="tabela-processos-wrapper">
+                    <table id="tabela-processos" aria-label="Tabela de Processos Cadastrados">
+                        <caption>Tabela de Processos</caption>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <label for="selecionar-todos" class="visually-hidden">
+                                        Selecionar todos os processos
+                                    </label>
+                                    <input type="checkbox" id="selecionar-todos" title="Selecionar todos os processos" aria-label="Selecionar todos os processos">
+                                </th>
+                                <th>Número do Processo</th>
+                                <th>Unidade</th>
+                                <th>Prioridade</th>
+                                <th>Origem</th>
+                                <th>Data de Entrada</th>
+                                <th>Data de Designação</th>
+                                <th>Data de Conclusão</th>
+                                <th>Data de Saída</th>
+                                <th>Tipo de Demanda</th>
+                                <th>Natureza</th>
+                                <th>ANO PTI</th>
+                                <th>Semestre</th>
+                                <th>META</th>
+                                <th>Encarregado da Elaboração</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <button id="btn-apagar-selecionados" disabled>Apagar Selecionados</button>
+        </section>
+
+        <section id="alteracao" class="content hidden">
+            <h2>Alterar Processo</h2>
+            <label for="alterar-numero-processo">Número do Processo*:</label>
+            <input type="text" id="alterar-numero-processo" required placeholder="Ex: 12345e25" pattern="\d{5}e\d{2}">
+            <button id="btn-buscar-alterar">Buscar</button>
+            <form id="form-alteracao" class="hidden" role="form">
+                <fieldset>
+                    <legend>Dados Básicos</legend>
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <label for="alterar-unidade">Unidade Participante*:</label>
+                            <input type="text" id="alterar-unidade" required>
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-prioridade">Prioridade*:</label>
+                            <select id="alterar-prioridade" required>
+                                <option value="">Selecione</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Média">Média</option>
+                                <option value="Baixa">Baixa</option>
+                            </select>
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-origem">Origem*:</label>
+                            <input type="text" id="alterar-origem" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Datas</legend>
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <label for="alterar-data-entrada">Data de Entrada na Unidade*:</label>
+                            <input type="date" id="alterar-data-entrada" required>
+                            <span id="error-alterar-data-entrada" class="erro"></span>
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-data-designacao">Data de Designação:</label>
+                            <input type="date" id="alterar-data-designacao">
+                            <span id="error-alterar-data-designacao" class="erro"></span>
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-data-conclusao">Data de Conclusão:</label>
+                            <input type="date" id="alterar-data-conclusao">
+                            <span id="error-alterar-data-conclusao" class="erro"></span>
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-data-saida">Data de Saída:</label>
+                            <input type="date" id="alterar-data-saida">
+                            <span id="error-alterar-data-saida" class="erro"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Dados Adicionais</legend>
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <label for="alterar-tipo-demanda">Tipo de Demanda*:</label>
+                            <select id="alterar-tipo-demanda" required>
+                                <option value="">Selecione</option>
+                                <option value="Interna">Interna</option>
+                                <option value="Externa">Externa</option>
+                            </select>
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-natureza">Natureza*:</label>
+                            <input type="text" id="alterar-natureza" required>
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-ano-pti">ANO PTI:</label>
+                            <input type="text" id="alterar-ano-pti">
+                        </div>
+                        <div class="grid-item">
+                            <label for="alterar-semestre">Semestre:</label>
+                            <select id="alterar-semestre">
+                                <option value="">Selecione</option>
+                                <option value="1º Semestre">1º Semestre</option>
+                                <option value="2º Semestre">2º Semestre</option>
+                            </select>
+                        </div>
+                        <div class="grid-item full-width">
+                            <label for="alterar-meta">META*:</label>
+                            <select id="alterar-meta" required>
+                                <option value="">Selecione</option>
+                                <option value="01 – Análise de P. de Contas de PM- Vínculos: SAÚDE, MDE/FUNDEB e terceirização, com RPC">01 – Análise de P. de Contas de PM- Vínculos: SAÚDE, MDE/FUNDEB e terceirização, com RPC</option>
+                                <option value="02 – Auxiliar RC de PM, CM E DESC. Emitir RPC">02 – Auxiliar RC de PM, CM E DESC. Emitir RPC</option>
+                                <option value="03 – Elaborar RT – TCE/TO, Reexames, Denúncia e outros">03 – Elaborar RT – TCE/TO, Reexames, Denúncia e outros</option>
+                                <option value="04 – Instrução Processual – Verificações, recomendações que não necessitem de RT">04 – Instrução Processual – Verificações, recomendações que não necessitem de RT</option>
+                                <option value="05 – Atividades na fase de planej. da auditoria de conformidade/elaboração de papéis de trabalho">05 – Atividades na fase de planej. da auditoria de conformidade/elaboração de papéis de trabalho</option>
+                                <option value="06 – Atividades na fase de execução da auditoria de conformidade">06 – Atividades na fase de execução da auditoria de conformidade</option>
+                                <option value="07 – Atividades na elaboração e correção do relatório da auditoria de conformidade">07 – Atividades na elaboração e correção do relatório da auditoria de conformidade</option>
+                                <option value="08 – Cursos com 40 horas de carga horária mínima">08 – Cursos com 40 horas de carga horária mínima</option>
+                                <option value="09 – Atividades de inspeção IN LOCO">09 – Atividades de inspeção IN LOCO</option>
+                                <option value="10 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da PM">10 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da PM</option>
+                                <option value="11 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da CM">11 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da CM</option>
+                                <option value="12 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da DESC/Consórcios">12 – Planejamento e elaboração dos relatórios das análises periódicas de regularidades da DESC/Consórcios</option>
+                                <option value="13 – Participação em reuniões periódicas com a equipe da inspetoria">13 – Participação em reuniões periódicas com a equipe da inspetoria</option>
+                                <option value="14 – Atividades extras: cursos, comissões, palestras e correlatos">14 – Atividades extras: cursos, comissões, palestras e correlatos</option>
+                                <option value="15 – Medidas Administrativa Preparatória - MAP">15 – Medidas Administrativa Preparatória - MAP</option>
+                            </select>
+                        </div>
+                        <div class="grid-item full-width">
+                            <label for="alterar-encarregado">Encarregado da Elaboração*:</label>
+                            <select id="alterar-encarregado" required>
+                                <option value="">Selecione</option>
+                                <option value="Luana Alice">Luana Alice</option>
+                                <option value="José Vilebaldo">José Vilebaldo</option>
+                                <option value="João Pedro">João Pedro</option>
+                                <option value="Maicon Breno">Maicon Breno</option>
+                                <option value="Kleber Sena">Kleber Sena</option>
+                                <option value="Fábio Luís">Fábio Luís</option>
+                                <option value="Anderson dos Anjos">Anderson dos Anjos</option>
+                                <option value="Agnelo das Mercês">Agnelo das Mercês</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Observações</legend>
+                    <label for="alterar-observacoes">Observações:</label>
+                    <textarea id="alterar-observacoes"></textarea>
+                </fieldset>
+                <button type="submit">Alterar</button>
+                <button type="button" id="btn-cancelar-alteracao">Cancelar</button>
+            </form>
+        </section>
+
+        <section id="envio" class="content hidden">
+            <h2>Envio de Atividade</h2>
+            <label for="destinatario">Destinatário*:</label>
+            <select id="destinatario" required>
+                <option value="">Selecione um destinatário</option>
+                <option value="kleber.sena@tcm.ba.gov.br">kleber.sena@tcm.ba.gov.br</option>
+                <option value="fabio.luis@tcm.ba.gov.br">fabio.luis@tcm.ba.gov.br</option>
+                <option value="anderson.anjos@tcm.ba.gov.br">anderson.anjos@tcm.ba.gov.br</option>
+                <option value="agnelo.merces@tcm.ba.gov.br">agnelo.merces@tcm.ba.gov.br</option>
+                <option value="joselito.junior@tcm.ba.gov.br">joselito.junior@tcm.ba.gov.br</option>
+            </select>
+            
+            <table id="tabela-envio" aria-label="Tabela de Processos para Envio">
+                <thead>
+                    <tr>
+                        <th>
+                            <label for="selecionar-todos-envio" class="visually-hidden">
+                                Selecionar todos para envio
+                            </label>
+                            <input type="checkbox" id="selecionar-todos-envio" title="Selecionar todos os processos para envio" aria-label="Selecionar todos os processos para envio">
+                        </th>
+                        <th>Número do Processo</th>
+                        <th>Unidade</th>
+                        <th>Prioridade</th>
+                        <th>Origem</th>
+                        <th>Data de Entrada</th>
+                        <th>Natureza</th>
+                        <th>META</th>
+                        <th>Encarregado da Elaboração</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="btn-enviar-atividade" disabled>Enviar Email</button>
+        </section>
+
+        <section id="acompanhamento" class="content hidden">
+            <h2>Acompanhar</h2>
+            <table id="tabela-acompanhamento" aria-label="Tabela de Acompanhamento de Envios">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selecionar-todos-acompanhamento" title="Selecionar todos os envios" aria-label="Selecionar todos os envios">
+                        </th>
+                        <th>Número do Processo</th>
+                        <th>Destinatário</th>
+                        <th>Data de Envio</th>
+                        <th>Prazo Restante</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="btn-apagar-acompanhamento" disabled>Apagar Selecionados</button>
+        </section>
+        <section id="exportar-excel" class="content hidden">
+            <h2>Exportar para Excel</h2>
+            <form id="form-exportar-excel" role="form">
+                <label><input type="checkbox" name="campos" value="numero"> Número do Processo</label>
+                <label><input type="checkbox" name="campos" value="unidade"> Unidade</label>
+                <label><input type="checkbox" name="campos" value="prioridade"> Prioridade</label>
+                <label><input type="checkbox" name="campos" value="origem"> Origem</label>
+                <label><input type="checkbox" name="campos" value="dataEntrada"> Data de Entrada</label>
+                <label><input type="checkbox" name="campos" value="dataDesignacao"> Data de Designação</label>
+                <label><input type="checkbox" name="campos" value="dataConclusao"> Data de Conclusão</label>
+                <label><input type="checkbox" name="campos" value="dataSaida"> Data de Saída</label>
+                <label><input type="checkbox" name="campos" value="tipoDemanda"> Tipo de Demanda</label>
+                <label><input type="checkbox" name="campos" value="natureza"> Natureza</label>
+                <label><input type="checkbox" name="campos" value="anoPti"> ANO PTI</label>
+                <label><input type="checkbox" name="campos" value="semestre"> Semestre</label>
+                <label><input type="checkbox" name="campos" value="meta"> META</label>
+                <label><input type="checkbox" name="campos" value="encarregado"> Encarregado da Elaboração</label>
+                <label><input type="checkbox" name="campos" value="observacoes"> Observações</label>
+                <button type="submit">Exportar</button>
+                <button type="button" id="btn-cancelar-exportar">Cancelar</button>
+            </form>
+        </section>
+
+        <section id="backup" class="content hidden">
+            <h2>Backup</h2>
+            <button id="btn-gerar-backup">Gerar Backup</button>
+            <button id="btn-cancelar-backup">Cancelar</button>
+        </section>
+
+        <section id="restaurar" class="content hidden">
+            <h2>Restaurar Processos</h2>
+            <label for="input-restaurar">Selecione o arquivo de backup (.json):</label>
+            <input type="file" id="input-restaurar" accept=".json">
+            <table id="tabela-restaurar" aria-label="Tabela de Processos para Restauração">
+                <thead>
+                    <tr>
+                        <th>
+                            <label for="selecionar-todos-restaura" class="visually-hidden">
+                                Selecionar todos para restauração
+                            </label>
+                            <input type="checkbox" id="selecionar-todos-restaura" title="Selecionar todos os processos para restauração" aria-label="Selecionar todos os processos para restauração">
+                        </th>
+                        <th>Número do Processo</th>
+                        <th>Unidade</th>
+                        <th>Prioridade</th>
+                        <th>Origem</th>
+                        <th>Data de Entrada</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="btn-restaurar-selecionados" disabled>Restaurar Selecionados</button>
+            <button id="btn-restaurar-todos">Restaurar Todos</button>
+            <button type="button" id="btn-cancelar-restaurar">Cancelar</button>
+        </section>
+
+        <section id="sair" class="content hidden">
+            <h2>Sair do Sistema</h2>
+            <p class="aviso">O BACKUP JÁ FOI FEITO?</p>
+            <div class="sair-buttons">
+                <button id="btn-sair-sim">SIM</button>
+                <button id="btn-sair-nao">NÃO</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Versão: 1.55</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

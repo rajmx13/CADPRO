@@ -1,0 +1,246 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Utilização - Gerenciador de Processos</title>
+    <link rel="stylesheet" href="manual.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Índice</h2>
+            <ul>
+                <li><a href="#introducao">Introdução</a></li>
+                <li><a href="#cadastrar-processo">Cadastrar Processo</a></li>
+                <li><a href="#listar-processos">Listar Processos</a></li>
+                <li><a href="#alterar-processo">Alterar Processo</a></li>
+                <li><a href="#envio-atividade">Envio de Atividade</a></li>
+                <li><a href="#acompanhar">Acompanhar Processos</a></li>
+                <li><a href="#manutencao">Manutenção</a>
+                    <ul>
+                        <li><a href="#exportar-excel">Exportar para Excel</a></li>
+                        <li><a href="#backup">Backup</a></li>
+                        <li><a href="#restaurar">Restaurar</a></li>
+                    </ul>
+                </li>
+                <li><a href="#sair">Sair do Sistema</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <header>
+                <h1>Manual de Utilização do Gerenciador de Processos</h1>
+                <p>Versão: 1.50 | Data: 29 de julho de 2025</p>
+            </header>
+
+            <section id="introducao">
+                <h2>Introdução</h2>
+                <p>O <strong>Gerenciador de Processos</strong> é um aplicativo web desenvolvido para facilitar o cadastro, gerenciamento, envio e acompanhamento de processos administrativos. Este manual explica como utilizar cada funcionalidade do sistema, com instruções passo a passo e descrições de capturas de tela para orientar o usuário.</p>
+                <p><em>Captura de Tela 1: Tela inicial do Gerenciador de Processos, mostrando o cabeçalho com o título "Gerenciador de Processos", imagens laterais (esquerda: cad5.jpg, direita: iTCM (1).jpg) e a barra de navegação com os botões: Cadastrar Processo, Listar Processos, Alterar Processo, Envio de Atividade, Acompanhar, Manutenção e Sair.</em></p>
+            </section>
+
+            <section id="cadastrar-processo">
+                <h2>Cadastrar Processo</h2>
+                <p>Esta funcionalidade permite registrar um novo processo no sistema, preenchendo informações como número do processo, unidade participante, prioridade, entre outros.</p>
+                <h3>Como Acionar</h3>
+                <ol>
+                    <li>Clique no botão <strong>Cadastrar Processo</strong> na barra de navegação, localizada no topo da tela.</li>
+                    <li>Preencha o formulário exibido com as informações solicitadas:
+                        <ul>
+                            <li><strong>Número do Processo</strong>: Insira no formato 12345e25 (ex.: 12345e25).</li>
+                            <li><strong>Unidade Participante</strong>: Digite o nome da unidade (ex.: "Secretaria de Educação").</li>
+                            <li><strong>Prioridade</strong>: Escolha entre Alta, Média ou Baixa.</li>
+                            <li><strong>Origem</strong>: Informe a origem do processo (ex.: "TCE/TO").</li>
+                            <li><strong>Data de Entrada na Unidade</strong>: Insira no formato dd-mm-aaaa (ex.: 01-07-2025).</li>
+                            <li><strong>Data de Designação</strong>, <strong>Data de Conclusão</strong>, <strong>Data de Saída</strong>: Insira no mesmo formato, se aplicável.</li>
+                            <li><strong>Natureza</strong>: Descreva a natureza do processo (ex.: "Análise de Contas").</li>
+                            <li><strong>Tipo de Demanda</strong>: Escolha entre Interna ou Externa.</li>
+                            <li><strong>Encarregado da Elaboração</strong>: Selecione um nome da lista (ex.: "Luana Alice").</li>
+                            <li><strong>ANO PTI</strong>, <strong>Semestre</strong>, <strong>META</strong>: Preencha os campos de vinculação ao PTI.</li>
+                            <li><strong>Observações</strong>: Adicione comentários adicionais, se necessário.</li>
+                        </ul>
+                    </li>
+                    <li>Clique no botão <strong>Salvar</strong> para registrar o processo.</li>
+                    <li>Para cancelar, clique em <strong>Cancelar</strong>, e a tela de listagem será exibida.</li>
+                </ol>
+                <p><em>Captura de Tela 2: Tela de cadastro de processos, mostrando o formulário preenchido com campos como "Número do Processo: 12345e25", "Unidade Participante: Secretaria de Educação", e o botão "Salvar" destacado em azul.</em></p>
+                <p><strong>Nota</strong>: O campo "Número do Processo" deve seguir o formato 12345e25. Campos obrigatórios são marcados com um asterisco invisível; se não preenchidos, um alerta será exibido.</p>
+            </section>
+
+            <section id="listar-processos">
+                <h2>Listar Processos</h2>
+                <p>Permite visualizar todos os processos cadastrados em uma tabela, com opção de busca e exclusão de processos selecionados.</p>
+                <h3>Como Acionar</h3>
+                <ol>
+                    <li>Clique no botão <strong>Listar Processos</strong> na barra de navegação.</li>
+                    <li>A tabela exibirá todos os processos, com colunas para:
+                        <ul>
+                            <li>Seleção (checkbox), Número do Processo, Unidade Participante, Prioridade, Origem, Datas, Natureza, Tipo de Demanda, Encarregado, ANO PTI, Semestre, META e Observações.</li>
+                        </ul>
+                    </li>
+                    <li>Para buscar, digite o número do processo ou unidade participante no campo de busca acima da tabela.</li>
+                    <li>Para excluir processos:
+                        <ul>
+                            <li>Marque os processos desejados usando os checkboxes na primeira coluna.</li>
+                            <li>Clique em <strong>Apagar Selecionados</strong> abaixo da tabela.</li>
+                            <li>Confirme a exclusão no pop-up.</li>
+                        </ul>
+                    </li>
+                    <li>Para selecionar todos os processos, marque o checkbox <strong>Selecionar Todos</strong> no cabeçalho da tabela.</li>
+                </ol>
+                <p><em>Captura de Tela 3: Tela de listagem de processos, mostrando uma tabela com vários processos cadastrados, o campo de busca com o texto "Secretaria" e alguns checkboxes marcados. O botão "Apagar Selecionados" está visível abaixo da tabela.</em></p>
+                <p><strong>Nota</strong>: A busca é dinâmica e filtra processos em tempo real. A exclusão é irreversível, então confirme com cuidado.</p>
+            </section>
+
+            <section id="alterar-processo">
+                <h2>Alterar Processo</h2>
+                <p>Permite editar as informações de um processo existente, buscando pelo número do processo.</p>
+                <h3>Como Acionar</h3>
+                <ol>
+                    <li>Clique no botão <strong>Alterar Processo</strong> na barra de navegação.</li>
+                    <li>Digite o número do processo (ex.: 12345e25) no campo de busca e clique em <strong>Buscar</strong>.</li>
+                    <li>Se o processo for encontrado, o formulário será preenchido com os dados atuais.</li>
+                    <li>Edite os campos desejados (os mesmos do cadastro).</li>
+                    <li>Clique em <strong>Salvar Alterações</strong> para atualizar o processo.</li>
+                    <li>Para cancelar, clique em <strong>Cancelar</strong>, e a tela de listagem será exibida.</li>
+                </ol>
+                <p><em>Captura de Tela 4: Tela de alteração de processo, mostrando o campo de busca com "12345e25" digitado e o formulário preenchido com os dados do processo, com o botão "Salvar Alterações" destacado.</em></p>
+                <p><strong>Nota</strong>: O número do processo não pode ser alterado. Se o número inserido for inválido ou não encontrado, um alerta será exibido.</p>
+            </section>
+
+            <section id="envio-atividade">
+                <h2>Envio de Atividade</h2>
+                <p>Permite selecionar processos e enviá-los por e-mail para um destinatário específico.</p>
+                <h3>Como Acionar</h3>
+                <ol>
+                    <li>Clique no botão <strong>Envio de Atividade</strong> na barra de navegação.</li>
+                    <li>Selecione um destinatário no menu suspenso (ex.: "anderson.anjos@tcm.ba.gov.br").</li>
+                    <li>Marque os processos a serem enviados usando os checkboxes na tabela.</li>
+                    <li>Quando pelo menos um processo e um destinatário estiverem selecionados, o botão <strong>Enviar</strong> será ativado.</li>
+                    <li>Clique em <strong>Enviar</strong> para abrir o cliente de e-mail padrão com os dados dos processos preenchidos no corpo do e-mail.</li>
+                </ol>
+                <p><em>Captura de Tela 5: Tela de envio de atividade, mostrando o menu suspenso com um e-mail selecionado, três processos marcados na tabela e o botão "Enviar" ativado em azul.</em></p>
+                <p><strong>Nota</strong>: O e-mail é preparado com o remetente "agnelo.cordeiro@tcm.ba.gov.br" e inclui número do processo, unidade, natureza, meta e encarregado. Certifique-se de que um cliente de e-mail está configurado no dispositivo.</p>
+            </section>
+
+            <section id="acompanhar">
+                <h2>Acompanhar Processos</h2>
+                <p>Exibe os processos enviados, com informações sobre o destinatário, data de envio e prazo restante (15 dias úteis).</p>
+                <h3>Como Acionar</h3>
+                <ol>
+                    <li>Clique no botão <strong>Acompanhar</strong> na barra de navegação.</li>
+                    <li>A tabela mostrará:
+                        <ul>
+                            <li>Número do Processo, E-mail Encaminhado, Data de Envio, Prazo Restante.</li>
+                        </ul>
+                    </li>
+                    <li>Processos com prazo esgotado serão destacados em vermelho.</li>
+                </ol>
+                <p><em>Captura de Tela 6: Tela de acompanhamento, mostrando uma tabela com dois processos enviados, um com "Prazo Restante: 5 dias úteis" e outro com "Prazo Restante: PRAZO ESGOTADO" em vermelho.</em></p>
+                <p><strong>Nota</strong>: O prazo é calculado com base em dias úteis, excluindo fins de semana.</p>
+            </section>
+
+            <section id="manutencao">
+                <h2>Manutenção</h2>
+                <p>O menu <strong>Manutenção</strong> contém três subfuncionalidades: Exportar para Excel, Backup e Restaurar. Para acessá-lo, clique no botão <strong>Manutenção</strong> na barra de navegação, e um submenu será exibido.</p>
+                <p><em>Captura de Tela 7: Barra de navegação com o botão "Manutenção" clicado, mostrando o submenu com os botões "Exportar para Excel", "Backup" e "Restaurar".</em></p>
+
+                <section id="exportar-excel">
+                    <h3>Exportar para Excel</h3>
+                    <p>Gera um arquivo Excel (.xlsx) com todos os processos cadastrados.</p>
+                    <h4>Como Acionar</h4>
+                    <ol>
+                        <li>Clique no botão <strong>Manutenção</strong> na barra de navegação.</li>
+                        <li>No submenu, clique em <strong>Exportar para Excel</strong>.</li>
+                        <li>Um arquivo "processos.xlsx" será baixado automaticamente.</li>
+                    </ol>
+                    <p><em>Captura de Tela 8: Janela do navegador mostrando o download do arquivo "processos.xlsx" após clicar em "Exportar para Excel".</em></p>
+                    <p><strong>Nota</strong>: Se não houver processos cadastrados, um alerta será exibido.</p>
+                </section>
+
+                <section id="backup">
+                    <h3>Backup</h3>
+                    <p>Salva todos os processos em um arquivo JSON para backup.</p>
+                    <h4>Como Acionar</h4>
+                    <ol>
+                        <li>Clique no botão <strong>Manutenção</strong> na barra de navegação.</li>
+                        <li>No submenu, clique em <strong>Backup</strong>.</li>
+                        <li>Um arquivo "backup_processos.json" será baixado automaticamente.</li>
+                    </ol>
+                    <p><em>Captura de Tela 9: Janela do navegador mostrando o download do arquivo "backup_processos.json" após clicar em "Backup".</em></p>
+                    <p><strong>Nota</strong>: Guarde o arquivo em um local seguro para restaurações futuras.</p>
+                </section>
+
+                <section id="restaurar">
+                    <h3>Restaurar</h3>
+                    <p>Restaura processos a partir de um arquivo JSON previamente salvo.</p>
+                    <h4>Como Acionar</h4>
+                    <ol>
+                        <li>Clique no botão <strong>Manutenção</strong> na barra de navegação.</li>
+                        <li>No submenu, clique em <strong>Restaurar</strong>.</li>
+                        <li>Selecione o arquivo JSON (ex.: "backup_processos.json") na janela de seleção de arquivos.</li>
+                        <li>Uma tabela será exibida com os processos do arquivo. Marque os processos desejados ou clique em <strong>Restaurar Todos</strong>.</li>
+                        <li>Clique em <strong>Restaurar Selecionados</strong> ou <strong>Restaurar Todos</strong> para importar os processos.</li>
+                        <li>Para cancelar, clique em <strong>Cancelar</strong>.</li>
+                    </ol>
+                    <p><em>Captura de Tela 10: Tela de restauração, mostrando uma tabela com processos do arquivo JSON, alguns checkboxes marcados e os botões "Restaurar Selecionados", "Restaurar Todos" e "Cancelar".</em></p>
+                    <p><strong>Nota</strong>: Processos com números duplicados serão ignorados. O arquivo JSON deve ser válido e ter até 50MB.</p>
+                </section>
+            </section>
+
+            <section id="sair">
+                <h2>Sair do Sistema</h2>
+                <p>Permite sair do sistema, com uma verificação para garantir que o backup foi realizado.</p>
+                <h3>Como Acionar</h3>
+                <ol>
+                    <li>Clique no botão <strong>Sair</strong> na barra de navegação.</li>
+                    <li>Uma mensagem será exibida: "O BACKUP JÁ FOI FEITO?"</li>
+                    <li>Clique em <strong>SIM</strong> para fechar o sistema.</li>
+                    <li>Clique em <strong>NÃO</strong> para voltar à tela de backup (acessada via menu Manutenção).</li>
+                </ol>
+                <p><em>Captura de Tela 11: Tela de saída, mostrando a mensagem "O BACKUP JÁ FOI FEITO?" em vermelho e os botões "SIM" e "NÃO" abaixo.</em></p>
+                <p><strong>Nota</strong>: Recomenda-se realizar o backup antes de sair para evitar perda de dados.</p>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
